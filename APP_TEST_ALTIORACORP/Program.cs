@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using APP_TEST_ALTIORACORP.Data;
+using Microsoft.Extensions.Logging;
 
 namespace APP_TEST_ALTIORACORP
 {
@@ -16,8 +19,9 @@ namespace APP_TEST_ALTIORACORP
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+        WebHost.CreateDefaultBuilder(args)
+            .UseStartup<Startup>()
+            .Build();
+
     }
 }

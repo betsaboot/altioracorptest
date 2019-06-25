@@ -1,0 +1,54 @@
+﻿@model APP_TEST_ALTIORACORP.Models.Pedidos
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Pedidos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CLIENTE)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CLIENTE)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PRODUCTO)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PRODUCTO)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CANTIDAD)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CANTIDAD)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FECHAPEDIDO)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FECHAPEDIDO)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PRECIOUNITARIO)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PRECIOUNITARIO)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TOTAL)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TOTAL)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
