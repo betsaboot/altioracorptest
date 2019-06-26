@@ -23,6 +23,11 @@
                 <span asp-validation-for="APELLIDOS" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="IDENTIFICACION" class="control-label"></label>
+                <input asp-for="IDENTIFICACION" class="form-control" />
+                <span asp-validation-for="IDENTIFICACION" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="DIRECCION" class="control-label"></label>
                 <input asp-for="DIRECCION" class="form-control" />
                 <span asp-validation-for="DIRECCION" class="text-danger"></span>
@@ -51,3 +56,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
