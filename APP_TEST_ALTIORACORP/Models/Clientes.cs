@@ -13,7 +13,6 @@ namespace APP_TEST_ALTIORACORP.Models
         public string APELLIDOS { get; set; }
         public string DIRECCION { get; set; }
         public string TELEFONO { get; set; }
-        public string TIPO { get; set; }
 
         public ICollection<Pedidos> Pedidos { get; set; }
     }

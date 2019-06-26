@@ -1,66 +1,59 @@
-﻿@model IEnumerable<APP_TEST_ALTIORACORP.Models.Clientes>
-
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Clientes";
 }
 
 <h2>Clientes</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NOMBRES)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.APELLIDOS)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IDENTIFICACION)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DIRECCION)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TELEFONO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TIPO)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NOMBRES)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.APELLIDOS)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IDENTIFICACION)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DIRECCION)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TELEFONO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TIPO)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.IDENTIFICACION">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.IDENTIFICACION">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IDENTIFICACION">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@(Html.DevExtreme().DataGrid<APP_TEST_ALTIORACORP.Models.Clientes>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("ClientesApi")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("IDENTIFICACION")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.IDENTIFICACION);
+
+        columns.AddFor(m => m.NOMBRES);
+
+        columns.AddFor(m => m.APELLIDOS);
+
+        columns.AddFor(m => m.DIRECCION);
+
+        columns.AddFor(m => m.TELEFONO);
+    })
+    .Editing(e => e.Mode(GridEditMode.Popup)
+           .AllowUpdating(true)
+           .AllowAdding(true)
+           .AllowDeleting(true)
+           .Popup(p => p
+                .Title("Clientes Guardar")
+                .ShowTitle(true)
+                .Width(700)
+                .Height(525)
+                .Position(pos => pos
+                    .My(HorizontalAlignment.Center, VerticalAlignment.Top)
+                    .At(HorizontalAlignment.Center, VerticalAlignment.Top)
+                    .Of(new JS("window"))
+                )
+           )
+           .Form(f => f.Items(items =>
+           {
+               items.AddGroup()
+                   .ColCount(2)
+                   .ColSpan(2)
+                   .Items(groupItems =>
+                   {
+                       groupItems.AddSimpleFor(m => m.IDENTIFICACION);
+                       groupItems.AddSimpleFor(m => m.NOMBRES);
+                       groupItems.AddSimpleFor(m => m.APELLIDOS);
+                       groupItems.AddSimpleFor(m => m.DIRECCION);
+                       groupItems.AddSimpleFor(m => m.TELEFONO);
+                   });
+           }))
+        )
+)

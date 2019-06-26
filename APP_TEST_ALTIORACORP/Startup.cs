@@ -52,7 +52,15 @@ namespace APP_TEST_ALTIORACORP
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Clientes}/{action=Index}/{id?}");
+                    template: "{controller=Clientes}/{action=Index}");
+
+                routes.MapRoute(
+                name: "Productos",
+                template: "{controller=Productos}/{action=Index}");
+
+                routes.MapRoute(
+                name: "Pedidos",
+                template: "{controller=Pedidos}/{action=Index}");
             });
         }
     }
