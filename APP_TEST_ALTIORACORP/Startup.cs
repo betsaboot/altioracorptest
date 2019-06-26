@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using APP_TEST_ALTIORACORP.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,12 +47,12 @@ namespace APP_TEST_ALTIORACORP
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Clientes}/{action=Index}");
+                    name: "Productos",
+                    template: "{controller=Productos}/{action=PIndex}");
 
                 routes.MapRoute(
-                name: "Productos",
-                template: "{controller=Productos}/{action=Index}");
+                name: "default",
+                template: "{controller=Productos}/{action=PIndex}");
 
                 routes.MapRoute(
                 name: "Pedidos",

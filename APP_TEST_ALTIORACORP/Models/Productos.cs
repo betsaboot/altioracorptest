@@ -10,7 +10,7 @@ namespace APP_TEST_ALTIORACORP.Models
     {
         [Key]public int ID { get; set; }
         public string DESCRIPCION { get; set; }
-        public decimal PRECIOUNITARIO { get; set; }
+        public double PRECIOUNITARIO { get; set; }
         public string CODIGO { get; set; }
 
         public ICollection<Pedidos> Pedidos { get; set; }

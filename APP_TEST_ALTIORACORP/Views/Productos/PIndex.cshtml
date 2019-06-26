@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "PIndex";
+}
+
+<h2>Productos</h2>
+
+@(Html.DevExtreme().DataGrid<APP_TEST_ALTIORACORP.Models.Productos>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("ProductosApi")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("ID")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.DESCRIPCION);
+
+        columns.AddFor(m => m.PRECIOUNITARIO);
+
+        columns.AddFor(m => m.CODIGO);
+    })
+    .Editing(e => e.Mode(GridEditMode.Popup)
+           .AllowUpdating(true)
+           .AllowAdding(true)
+           .AllowDeleting(true)
+           .Popup(p => p
+                .Title("Productos Guardar")
+                .ShowTitle(true)
+                .Width(700)
+                .Height(525)
+                .Position(pos => pos
+                    .My(HorizontalAlignment.Center, VerticalAlignment.Top)
+                    .At(HorizontalAlignment.Center, VerticalAlignment.Top)
+                    .Of(new JS("window"))
+                )
+           )
+           .Form(f => f.Items(items =>
+           {
+               items.AddGroup()
+                   .ColCount(2)
+                   .ColSpan(2)
+                   .Items(groupItems =>
+                   {
+                       groupItems.AddSimpleFor(m => m.DESCRIPCION);
+                       groupItems.AddSimpleFor(m => m.PRECIOUNITARIO);
+                       groupItems.AddSimpleFor(m => m.CODIGO);
+                   });
+           }))
+    )
+)
