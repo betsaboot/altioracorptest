@@ -18,9 +18,9 @@ namespace APP_TEST_ALTIORACORP.Models
         public int CANTIDAD { get; set; }
         public DateTime FECHAPEDIDO { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public decimal PRECIOUNITARIO { get; set; }
+        public double PRECIOUNITARIO { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public decimal TOTAL { get; set; }
+        public double TOTAL { get; set; }
 
         public Clientes Clientes { get; set; }
         public Productos Productos { get; set; }
