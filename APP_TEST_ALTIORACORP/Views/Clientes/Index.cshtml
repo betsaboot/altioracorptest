@@ -26,6 +26,17 @@
 
         columns.AddFor(m => m.TELEFONO);
     })
+    .SearchPanel(s => s
+        .Visible(true)
+        .HighlightCaseSensitive(true)
+    )
+        .Pager(p => p
+        .AllowedPageSizes(new int[] { 5, 8, 15, 30 })
+        .ShowInfo(true)
+        .ShowNavigationButtons(true)
+        .ShowPageSizeSelector(true)
+        .Visible(true))
+    .Paging(p => p.PageSize(8))
     .Editing(e => e.Mode(GridEditMode.Popup)
            .AllowUpdating(true)
            .AllowAdding(true)
