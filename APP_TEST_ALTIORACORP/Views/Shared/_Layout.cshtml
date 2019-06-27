@@ -51,11 +51,11 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="active nav-item"><a href="#" class="nav-link">Clientes</a></li>
-                <li class="nav-item"><a asp-page="/PIndex.cshtml" class="nav-link">Productos</a></li>
-                <li class="nav-item"><a href="@Url.Action("PeIndex", "Pedidos")">Pedidos</a></li>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li ><a class="nav-link" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a></li>
+                <li ><a class="nav-link" asp-area="" asp-controller="Productos" asp-action="PIndex" >Productos</a></li>
+                <li ><a class="nav-link" asp-area="" asp-controller="Pedidos" asp-action="PeIndex">Pedidos</a></li>
             </ul>
         </div>
     </nav>

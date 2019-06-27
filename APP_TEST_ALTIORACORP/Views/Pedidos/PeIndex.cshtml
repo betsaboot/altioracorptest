@@ -28,7 +28,7 @@
         ;
 
 
-        columns.AddFor(m => m.PED_PRODUCTO).Caption("PRODUCTO")
+        columns.AddFor(m => m.IDPRODUCTO).Caption("PRODUCTO")
         .Width(125)
                 .Lookup(lookup => lookup
                     .DataSource(d => d.Mvc().Controller("PedidosApi").LoadAction("ProductosLookup").Key("ID"))
@@ -36,11 +36,11 @@
                     .ValueExpr("ID")
                 ); ;
 
-        columns.AddFor(m => m.PED_CANTIDAD).Caption("CANTIDAD");
+        columns.AddFor(m => m.CANTIDAD).Caption("CANTIDAD");
 
-        columns.AddFor(m => m.PED_PRECIO_UNITARIO).Caption("PRECIO UNITARIO");
+        columns.AddFor(m => m.PRECIOUNITARIO).Caption("PRECIO UNITARIO");
 
-        columns.AddFor(m => m.PED_TOTAL).Caption("TOTAL");
+        columns.AddFor(m => m.TOTAL).Caption("TOTAL");
 
     })
     .Editing(e => e.Mode(GridEditMode.Popup)
@@ -65,10 +65,10 @@
                    .ColSpan(2)
                    .Items(groupItems =>
                    {
-                       groupItems.AddSimpleFor(m => m.FECHAPEDIDO);
+                       groupItems.AddSimpleFor(m => m.FECHAPEDIDO); 
                        groupItems.AddSimpleFor(m => m.CLIENTE);
-                       groupItems.AddSimpleFor(m => m.PED_PRODUCTO);
-                       groupItems.AddSimpleFor(m => m.PED_CANTIDAD);
+                       groupItems.AddSimpleFor(m => m.IDPRODUCTO);
+                       groupItems.AddSimpleFor(m => m.CANTIDAD);
 
                    });
            }))

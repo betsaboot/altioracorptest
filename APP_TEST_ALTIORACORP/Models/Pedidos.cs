@@ -14,13 +14,14 @@ namespace APP_TEST_ALTIORACORP.Models
         public int ID { get; set; }
         
         public string CLIENTE { get; set; }
-        public int PED_PRODUCTO { get; set; }
-        public int PED_CANTIDAD { get; set; }
+        public int IDPRODUCTO { get; set; }
+        public int CANTIDAD { get; set; }
         public DateTime FECHAPEDIDO { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public decimal PED_PRECIO_UNITARIO { get; set; }
+        public decimal PRECIOUNITARIO { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public decimal PED_TOTAL { get; set; }
+        public decimal TOTAL { get; set; }
+
         public Clientes Clientes { get; set; }
         public Productos Productos { get; set; }
     }

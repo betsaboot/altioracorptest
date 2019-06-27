@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace APP_TEST_ALTIORACORP.Models.Controllers
@@ -26,11 +25,11 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             var pedidos = _context.Pedidos.Select(i => new {
                 i.ID,
                 i.CLIENTE,
-                i.PED_PRODUCTO,
-                i.PED_CANTIDAD,
+                i.IDPRODUCTO,
+                i.CANTIDAD,
                 i.FECHAPEDIDO,
-                i.PED_PRECIO_UNITARIO,
-                i.PED_TOTAL
+                i.PRECIOUNITARIO,
+                i.TOTAL
             });
             return Json(DataSourceLoader.Load(pedidos, loadOptions));
         }
@@ -99,8 +98,8 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
         private void PopulateModel(Pedidos model, IDictionary values) {
             string CLIENTE = nameof(Pedidos.CLIENTE);
-            string PRODUCTO = nameof(Pedidos.PED_PRODUCTO);
-            string CANTIDAD = nameof(Pedidos.PED_CANTIDAD);
+            string PRODUCTO = nameof(Pedidos.IDPRODUCTO);
+            string CANTIDAD = nameof(Pedidos.CANTIDAD);
             string FECHAPEDIDO = nameof(Pedidos.FECHAPEDIDO);
 
             if(values.Contains(CLIENTE)) {
@@ -108,11 +107,11 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             }
 
             if(values.Contains(PRODUCTO)) {
-                model.PED_PRODUCTO = Convert.ToInt32(values[PRODUCTO]);
+                model.IDPRODUCTO = Convert.ToInt32(values[PRODUCTO]);
             }
 
             if(values.Contains(CANTIDAD)) {
-                model.PED_CANTIDAD = Convert.ToInt32(values[CANTIDAD]);
+                model.CANTIDAD = Convert.ToInt32(values[CANTIDAD]);
             }
 
             if(values.Contains(FECHAPEDIDO)) {
