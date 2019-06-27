@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "PeIndex";
+}
+
+<h2>Pedidos</h2>
+
+@(Html.DevExtreme().DataGrid<APP_TEST_ALTIORACORP.Models.Pedidos>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("PedidosApi")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("ID")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.FECHAPEDIDO).Caption("FECHA");
+
+        columns.AddFor(m => m.CLIENTE).Caption("CLIENTE")
+        .Width(125)
+                .Lookup(lookup => lookup
+                    .DataSource(d => d.Mvc().Controller("PedidosApi").LoadAction("ClientesLookup").Key("IDENTIFICACION"))
+                    .DisplayExpr("NOMBRE")
+                    .ValueExpr("IDENTIFICACION")
+                );
+        ;
+
+
+        columns.AddFor(m => m.PED_PRODUCTO).Caption("PRODUCTO")
+        .Width(125)
+                .Lookup(lookup => lookup
+                    .DataSource(d => d.Mvc().Controller("PedidosApi").LoadAction("ProductosLookup").Key("ID"))
+                    .DisplayExpr("DESCRIPCION")
+                    .ValueExpr("ID")
+                ); ;
+
+        columns.AddFor(m => m.PED_CANTIDAD).Caption("CANTIDAD");
+
+        columns.AddFor(m => m.PED_PRECIO_UNITARIO).Caption("PRECIO UNITARIO");
+
+        columns.AddFor(m => m.PED_TOTAL).Caption("TOTAL");
+
+    })
+    .Editing(e => e.Mode(GridEditMode.Popup)
+           .AllowUpdating(true)
+           .AllowAdding(true)
+           .AllowDeleting(true)
+           .Popup(p => p
+                .Title("Pedidos Guardar")
+                .ShowTitle(true)
+                .Width(700)
+                .Height(525)
+                .Position(pos => pos
+                    .My(HorizontalAlignment.Center, VerticalAlignment.Top)
+                    .At(HorizontalAlignment.Center, VerticalAlignment.Top)
+                    .Of(new JS("window"))
+                )
+           )
+           .Form(f => f.Items(items =>
+           {
+               items.AddGroup()
+                   .ColCount(2)
+                   .ColSpan(2)
+                   .Items(groupItems =>
+                   {
+                       groupItems.AddSimpleFor(m => m.FECHAPEDIDO);
+                       groupItems.AddSimpleFor(m => m.CLIENTE);
+                       groupItems.AddSimpleFor(m => m.PED_PRODUCTO);
+                       groupItems.AddSimpleFor(m => m.PED_CANTIDAD);
+
+                   });
+           }))
+    )
+)

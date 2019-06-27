@@ -19,8 +19,19 @@ namespace APP_TEST_ALTIORACORP.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Pedidos>().ToTable("Pedidos").HasKey(sc => new { sc.CLIENTE, sc.PED_PRODUCTO });
+            modelBuilder.Entity<Pedidos>().ToTable("Pedidos")
+                .HasOne(p => p.Clientes)
+                .WithMany(c => c.Pedidos)
+                .HasForeignKey(p => p.CLIENTE);
+
+            modelBuilder.Entity<Pedidos>().ToTable("Pedidos")
+                .HasOne(p => p.Productos)
+                .WithMany(c => c.Pedidos)
+                .HasForeignKey(p => p.PED_PRODUCTO);
+
             modelBuilder.Entity<Clientes>().ToTable("Clientes");
-            modelBuilder.Entity<Pedidos>().ToTable("Pedidos");
+            
             modelBuilder.Entity<Productos>().ToTable("Productos");
         }
 

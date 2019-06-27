@@ -1,6 +1,7 @@
 using APP_TEST_ALTIORACORP.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,21 +44,29 @@ namespace APP_TEST_ALTIORACORP
             }
 
             app.UseStaticFiles();
+            app.UseMvc(c => RouteConfig.Use(c));
 
-            app.UseMvc(routes =>
+
+        }
+
+        public static class RouteConfig
+        {
+            public static IRouteBuilder Use(IRouteBuilder routeBuilder)
             {
-                routes.MapRoute(
-                    name: "Productos",
-                    template: "{controller=Productos}/{action=PIndex}");
 
-                routes.MapRoute(
-                name: "default",
+                routeBuilder.MapRoute(name: "default",
+                    template: "{controller=Clientes}/{action=Index}");
+
+                routeBuilder.MapRoute(
+                    name: "Pedidos",
+                    template: "{controller=Pedidos}/{action=PeIndex}");
+
+                routeBuilder.MapRoute(
+                name: "Productos",
                 template: "{controller=Productos}/{action=PIndex}");
 
-                routes.MapRoute(
-                name: "Pedidos",
-                template: "{controller=Pedidos}/{action=Index}");
-            });
+                return routeBuilder;
+            }
         }
     }
 }
