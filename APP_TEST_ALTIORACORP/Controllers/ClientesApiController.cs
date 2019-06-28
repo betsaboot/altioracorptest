@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace APP_TEST_ALTIORACORP.Models.Controllers
@@ -15,15 +14,15 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
     [Route("api/[controller]/[action]")]
     public class ClientesApiController : Controller
     {
-        private AltioraContext _context;
+        private AltioraContext contexto;
 
         public ClientesApiController(AltioraContext context) {
-            this._context = context;
+            this.contexto = context;
         }
 
         [HttpGet]
-        public IActionResult Get(DataSourceLoadOptions loadOptions) {
-            var clientes = _context.Clientes.Select(i => new {
+        public IActionResult Seleccionar(DataSourceLoadOptions loadOptions) {
+            var clientes = contexto.Clientes.Select(i => new {
                 i.IDENTIFICACION,
                 i.NOMBRES,
                 i.APELLIDOS,
@@ -34,7 +33,7 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(string values) {
+        public IActionResult Insertar(string values) {
             var model = new Clientes();
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, _values);
@@ -42,15 +41,19 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            var result = _context.Clientes.Add(model);
-            _context.SaveChanges();
+            //if (ValidacionCliente(nameof(Clientes.IDENTIFICACION)))
+                //return View("Index");
+
+            var result = contexto.Clientes.Add(model);
+            contexto.SaveChanges();
 
             return Json(result.Entity.IDENTIFICACION);
+                       
         }
 
         [HttpPut]
-        public IActionResult Put(string key, string values) {
-            var model = _context.Clientes.FirstOrDefault(item => item.IDENTIFICACION == key);
+        public IActionResult Actualizar(string key, string values) {
+            var model = contexto.Clientes.FirstOrDefault(item => item.IDENTIFICACION == key);
             if(model == null)
                 return StatusCode(409, "Clientes not found");
 
@@ -60,18 +63,22 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            _context.SaveChanges();
+            contexto.SaveChanges();
             return Ok();
         }
 
         [HttpDelete]
-        public void Delete(string key) {
-            var model = _context.Clientes.FirstOrDefault(item => item.IDENTIFICACION == key);
+        public void Eliminar(string key) {
+            var model = contexto.Clientes.FirstOrDefault(item => item.IDENTIFICACION == key);
 
-            _context.Clientes.Remove(model);
-            _context.SaveChanges();
+            contexto.Clientes.Remove(model);
+            contexto.SaveChanges();
         }
 
+        protected string GetErrorMessage()
+        {
+            return $"Ya existe una identificación igual a la ingresada";
+        }
 
         private void PopulateModel(Clientes model, IDictionary values) {
             string IDENTIFICACION = nameof(Clientes.IDENTIFICACION);
@@ -111,5 +118,27 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
             return String.Join(" ", messages);
         }
+
+        private string ClienteExistente(ModelStateDictionary modelState)
+        {
+            var messages = new List<string>();
+
+            foreach (var entry in modelState)
+            {
+                foreach (var error in entry.Value.Errors)
+                    messages.Add(error.ErrorMessage);
+            }
+
+            return String.Join("Actualmente ya se encuentra un registro con la identificación registrada ", messages);
+        }
+
+        private bool ValidacionCliente(string id) {
+
+            var model = contexto.Clientes.FirstOrDefault(item => item.IDENTIFICACION == id);
+            return true;
+        }
+
+        
+
     }
 }

@@ -14,15 +14,15 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
     [Route("api/[controller]/[action]")]
     public class PedidosApiController : Controller
     {
-        private AltioraContext _context;
+        private AltioraContext contexto;
 
         public PedidosApiController(AltioraContext context) {
-            this._context = context;
+            this.contexto = context;
         }
 
         [HttpGet]
-        public IActionResult Get(DataSourceLoadOptions loadOptions) {
-            var pedidos = _context.Pedidos.Select(i => new {
+        public IActionResult Seleccionar(DataSourceLoadOptions loadOptions) {
+            var pedidos = contexto.Pedidos.Select(i => new {
                 i.ID,
                 i.CLIENTE,
                 i.IDPRODUCTO,
@@ -35,7 +35,7 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(string values) {
+        public IActionResult Insertar(string values) {
             var model = new Pedidos();
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, _values);
@@ -43,15 +43,15 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            var result = _context.Pedidos.Add(model);
-            _context.SaveChanges();
+            var result = contexto.Pedidos.Add(model);
+            contexto.SaveChanges();
 
             return Json(result.Entity.ID);
         }
 
         [HttpPut]
-        public IActionResult Put(int key, string values) {
-            var model = _context.Pedidos.FirstOrDefault(item => item.ID == key);
+        public IActionResult Actualizar(int key, string values) {
+            var model = contexto.Pedidos.FirstOrDefault(item => item.ID == key);
             if(model == null)
                 return StatusCode(409, "Pedidos not found");
 
@@ -61,22 +61,22 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            _context.SaveChanges();
+            contexto.SaveChanges();
             return Ok();
         }
 
         [HttpDelete]
-        public void Delete(int key) {
-            var model = _context.Pedidos.FirstOrDefault(item => item.ID == key);
+        public void Eliminar(int key) {
+            var model = contexto.Pedidos.FirstOrDefault(item => item.ID == key);
 
-            _context.Pedidos.Remove(model);
-            _context.SaveChanges();
+            contexto.Pedidos.Remove(model);
+            contexto.SaveChanges();
         }
 
 
         [HttpGet]
         public IActionResult ClientesLookup(DataSourceLoadOptions loadOptions) {
-            var lookup = from i in _context.Clientes
+            var lookup = from i in contexto.Clientes
                          orderby i.NOMBRES
                          select new {
                              IDENTIFICACION = i.IDENTIFICACION,
@@ -87,7 +87,7 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
         [HttpGet]
         public IActionResult ProductosLookup(DataSourceLoadOptions loadOptions) {
-            var lookup = from i in _context.Productos
+            var lookup = from i in contexto.Productos
                          orderby i.DESCRIPCION
                          select new {
                              ID = i.ID,

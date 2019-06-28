@@ -12,10 +12,14 @@ namespace APP_TEST_ALTIORACORP.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        
+        [Required]
         public string CLIENTE { get; set; }
+        [Required]
         public int IDPRODUCTO { get; set; }
+        [Required]
         public int CANTIDAD { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime FECHAPEDIDO { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public double PRECIOUNITARIO { get; set; }

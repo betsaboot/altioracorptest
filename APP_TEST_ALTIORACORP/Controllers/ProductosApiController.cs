@@ -15,15 +15,15 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
     [Route("api/[controller]/[action]")]
     public class ProductosApiController : Controller
     {
-        private AltioraContext _context;
+        private AltioraContext contexto;
 
         public ProductosApiController(AltioraContext context) {
-            this._context = context;
+            this.contexto = context;
         }
 
         [HttpGet]
-        public IActionResult Get(DataSourceLoadOptions loadOptions) {
-            var productos = _context.Productos.Select(i => new {
+        public IActionResult Seleccionar(DataSourceLoadOptions loadOptions) {
+            var productos = contexto.Productos.Select(i => new {
                 i.ID,
                 i.DESCRIPCION,
                 i.PRECIOUNITARIO,
@@ -33,7 +33,7 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(string values) {
+        public IActionResult Insertar(string values) {
             var model = new Productos();
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, _values);
@@ -41,15 +41,15 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            var result = _context.Productos.Add(model);
-            _context.SaveChanges();
+            var result = contexto.Productos.Add(model);
+            contexto.SaveChanges();
 
             return Json(result.Entity.ID);
         }
 
         [HttpPut]
-        public IActionResult Put(int key, string values) {
-            var model = _context.Productos.FirstOrDefault(item => item.ID == key);
+        public IActionResult Actualizar(int key, string values) {
+            var model = contexto.Productos.FirstOrDefault(item => item.ID == key);
             if(model == null)
                 return StatusCode(409, "Productos not found");
 
@@ -59,16 +59,16 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
-            _context.SaveChanges();
+            contexto.SaveChanges();
             return Ok();
         }
 
         [HttpDelete]
-        public void Delete(int key) {
-            var model = _context.Productos.FirstOrDefault(item => item.ID == key);
+        public void Eliminar(int key) {
+            var model = contexto.Productos.FirstOrDefault(item => item.ID == key);
 
-            _context.Productos.Remove(model);
-            _context.SaveChanges();
+            contexto.Productos.Remove(model);
+            contexto.SaveChanges();
         }
 
 
