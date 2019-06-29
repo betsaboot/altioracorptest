@@ -3,6 +3,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -60,7 +61,10 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
             if(!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
-
+            /*
+            contexto.Pedidos.Attach(model);
+            contexto.Entry(model).State = EntityState.Modified;
+            */
             contexto.SaveChanges();
             return Ok();
         }
@@ -80,7 +84,8 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
                          orderby i.NOMBRES
                          select new {
                              IDENTIFICACION = i.IDENTIFICACION,
-                             NOMBRE = i.NOMBRES
+                             NOMBRE = i.NOMBRES,
+                             APELLIDOS = i.APELLIDOS
                          };
             return Json(DataSourceLoader.Load(lookup, loadOptions));
         }

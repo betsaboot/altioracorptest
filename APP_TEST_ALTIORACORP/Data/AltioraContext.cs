@@ -19,7 +19,7 @@ namespace APP_TEST_ALTIORACORP.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Pedidos>().ToTable("Pedidos").HasKey(sc => new { sc.CLIENTE, sc.IDPRODUCTO });
+            modelBuilder.Entity<Pedidos>().ToTable("Pedidos").HasKey(sc => new { sc.ID });
             modelBuilder.Entity<Pedidos>().ToTable("Pedidos")
                 .HasOne(p => p.Clientes)
                 .WithMany(c => c.Pedidos)

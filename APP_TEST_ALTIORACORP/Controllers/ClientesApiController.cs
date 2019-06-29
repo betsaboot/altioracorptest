@@ -34,21 +34,29 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
         [HttpPost]
         public IActionResult Insertar(string values) {
+
             var model = new Clientes();
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, _values);
 
-            if(!TryValidateModel(model))
-                return BadRequest(GetFullErrorMessage(ModelState));
+            var ids = contexto.Clientes.Select(i => new {
+                i.IDENTIFICACION});
 
-            //if (ValidacionCliente(nameof(Clientes.IDENTIFICACION)))
-                //return View("Index");
+            foreach (var item in ids)
+            {
+                if (item.IDENTIFICACION.Equals(model.IDENTIFICACION)) {
+                    ModelState.AddModelError("Error", "Ya se encuentra registrada la identificación ingresada");
+                }
+            }
+
+            if (!TryValidateModel(model))
+                return BadRequest(GetFullErrorMessage(ModelState));
 
             var result = contexto.Clientes.Add(model);
             contexto.SaveChanges();
 
             return Json(result.Entity.IDENTIFICACION);
-                       
+
         }
 
         [HttpPut]
@@ -119,26 +127,6 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             return String.Join(" ", messages);
         }
 
-        private string ClienteExistente(ModelStateDictionary modelState)
-        {
-            var messages = new List<string>();
-
-            foreach (var entry in modelState)
-            {
-                foreach (var error in entry.Value.Errors)
-                    messages.Add(error.ErrorMessage);
-            }
-
-            return String.Join("Actualmente ya se encuentra un registro con la identificación registrada ", messages);
-        }
-
-        private bool ValidacionCliente(string id) {
-
-            var model = contexto.Clientes.FirstOrDefault(item => item.IDENTIFICACION == id);
-            return true;
-        }
-
-        
 
     }
 }
