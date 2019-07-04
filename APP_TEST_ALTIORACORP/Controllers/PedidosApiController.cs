@@ -17,12 +17,14 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
     {
         private AltioraContext contexto;
 
-        public PedidosApiController(AltioraContext context) {
+        public PedidosApiController(AltioraContext context)
+        {
             this.contexto = context;
         }
 
         [HttpGet]
-        public IActionResult Seleccionar(DataSourceLoadOptions loadOptions) {
+        public IActionResult Seleccionar(DataSourceLoadOptions loadOptions)
+        {
             var pedidos = contexto.Pedidos.Select(i => new {
                 i.ID,
                 i.CLIENTE,
@@ -36,12 +38,33 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         }
 
         [HttpPost]
-        public IActionResult Insertar(string values) {
+        public IActionResult Insertar(string values)
+        {
             var model = new Pedidos();
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
+            int sumar = 0;
             PopulateModel(model, _values);
 
-            if(!TryValidateModel(model))
+            var ids = contexto.Productos.Select(i => new {
+                i.STOCK,
+                i.ID
+            });
+
+            foreach (var item in ids)
+            {
+                if (item.ID.Equals(model.IDPRODUCTO))
+                {
+                    sumar = sumar + model.CANTIDAD;
+                    int stock = item.STOCK - sumar;
+                    if (model.CANTIDAD >= stock)
+                    {
+                        ModelState.AddModelError("Error", "NO HAY STOCK DEL PRODUCTO INGRESADO");
+                    }
+
+                }
+            }
+
+            if (!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
 
             var result = contexto.Pedidos.Add(model);
@@ -51,26 +74,25 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         }
 
         [HttpPut]
-        public IActionResult Actualizar(int key, string values) {
+        public IActionResult Actualizar(int key, string values)
+        {
             var model = contexto.Pedidos.FirstOrDefault(item => item.ID == key);
-            if(model == null)
+            if (model == null)
                 return StatusCode(409, "Pedidos not found");
 
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, _values);
 
-            if(!TryValidateModel(model))
+            if (!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
-            /*
-            contexto.Pedidos.Attach(model);
-            contexto.Entry(model).State = EntityState.Modified;
-            */
+
             contexto.SaveChanges();
             return Ok();
         }
 
         [HttpDelete]
-        public void Eliminar(int key) {
+        public void Eliminar(int key)
+        {
             var model = contexto.Pedidos.FirstOrDefault(item => item.ID == key);
 
             contexto.Pedidos.Remove(model);
@@ -79,10 +101,12 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
 
         [HttpGet]
-        public IActionResult ClientesLookup(DataSourceLoadOptions loadOptions) {
+        public IActionResult ClientesLookup(DataSourceLoadOptions loadOptions)
+        {
             var lookup = from i in contexto.Clientes
                          orderby i.NOMBRES
-                         select new {
+                         select new
+                         {
                              IDENTIFICACION = i.IDENTIFICACION,
                              NOMBRE = i.NOMBRES,
                              APELLIDOS = i.APELLIDOS
@@ -91,49 +115,60 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         }
 
         [HttpGet]
-        public IActionResult ProductosLookup(DataSourceLoadOptions loadOptions) {
+        public IActionResult ProductosLookup(DataSourceLoadOptions loadOptions)
+        {
             var lookup = from i in contexto.Productos
                          orderby i.DESCRIPCION
-                         select new {
+                         select new
+                         {
                              ID = i.ID,
-                             DESCRIPCION = i.DESCRIPCION
+                             DESCRIPCION = i.DESCRIPCION,
+                             STOCK = i.STOCK
                          };
             return Json(DataSourceLoader.Load(lookup, loadOptions));
         }
 
-        private void PopulateModel(Pedidos model, IDictionary values) {
+        private void PopulateModel(Pedidos model, IDictionary values)
+        {
             string CLIENTE = nameof(Pedidos.CLIENTE);
             string PRODUCTO = nameof(Pedidos.IDPRODUCTO);
             string CANTIDAD = nameof(Pedidos.CANTIDAD);
             string FECHAPEDIDO = nameof(Pedidos.FECHAPEDIDO);
 
-            if(values.Contains(CLIENTE)) {
+            if (values.Contains(CLIENTE))
+            {
                 model.CLIENTE = Convert.ToString(values[CLIENTE]);
             }
 
-            if(values.Contains(PRODUCTO)) {
+            if (values.Contains(PRODUCTO))
+            {
                 model.IDPRODUCTO = Convert.ToInt32(values[PRODUCTO]);
             }
 
-            if(values.Contains(CANTIDAD)) {
+            if (values.Contains(CANTIDAD))
+            {
                 model.CANTIDAD = Convert.ToInt32(values[CANTIDAD]);
             }
 
-            if(values.Contains(FECHAPEDIDO)) {
+            if (values.Contains(FECHAPEDIDO))
+            {
                 model.FECHAPEDIDO = Convert.ToDateTime(values[FECHAPEDIDO]);
             }
 
         }
 
-        private string GetFullErrorMessage(ModelStateDictionary modelState) {
+        private string GetFullErrorMessage(ModelStateDictionary modelState)
+        {
             var messages = new List<string>();
 
-            foreach(var entry in modelState) {
-                foreach(var error in entry.Value.Errors)
+            foreach (var entry in modelState)
+            {
+                foreach (var error in entry.Value.Errors)
                     messages.Add(error.ErrorMessage);
             }
 
             return String.Join(" ", messages);
         }
+
     }
 }

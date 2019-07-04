@@ -21,6 +21,8 @@
         columns.AddFor(m => m.PRECIOUNITARIO);
 
         columns.AddFor(m => m.CODIGO);
+
+        columns.AddFor(m =>m.STOCK);
     })
     .SearchPanel(s => s
         .Visible(true)
@@ -58,6 +60,7 @@
                        groupItems.AddSimpleFor(m => m.DESCRIPCION);
                        groupItems.AddSimpleFor(m => m.PRECIOUNITARIO);
                        groupItems.AddSimpleFor(m => m.CODIGO);
+                       groupItems.AddSimpleFor(m => m.STOCK);
                    });
            }))
     )

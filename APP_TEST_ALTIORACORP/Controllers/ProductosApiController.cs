@@ -27,7 +27,8 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
                 i.ID,
                 i.DESCRIPCION,
                 i.PRECIOUNITARIO,
-                i.CODIGO
+                i.CODIGO,
+                i.STOCK
             });
             return Json(DataSourceLoader.Load(productos, loadOptions));
         }
@@ -76,8 +77,10 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
             string DESCRIPCION = nameof(Productos.DESCRIPCION);
             string PRECIOUNITARIO = nameof(Productos.PRECIOUNITARIO);
             string CODIGO = nameof(Productos.CODIGO);
+            string STOCK = nameof(Productos.STOCK);
 
-            if(values.Contains(DESCRIPCION)) {
+
+            if (values.Contains(DESCRIPCION)) {
                 model.DESCRIPCION = Convert.ToString(values[DESCRIPCION]);
             }
 
@@ -87,6 +90,10 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
             if(values.Contains(CODIGO)) {
                 model.CODIGO = Convert.ToString(values[CODIGO]);
+            }
+            if (values.Contains(STOCK))
+            {
+                model.STOCK = Convert.ToInt32(values[STOCK]);
             }
         }
 
