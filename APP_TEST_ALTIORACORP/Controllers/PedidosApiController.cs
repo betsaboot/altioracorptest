@@ -42,9 +42,9 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         {
             var model = new Pedidos();
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
-            int sumar = 0;
             PopulateModel(model, _values);
 
+            // ids trae informacion de la base de datos id y stock de productos
             var ids = contexto.Productos.Select(i => new {
                 i.STOCK,
                 i.ID
@@ -52,13 +52,21 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
 
             foreach (var item in ids)
             {
+                //model trae info de los formularios
+
                 if (item.ID.Equals(model.IDPRODUCTO))
                 {
-                    sumar = sumar + model.CANTIDAD;
-                    int stock = item.STOCK - sumar;
-                    if (model.CANTIDAD >= stock)
+
+                    if (model.CANTIDAD >= item.STOCK)
                     {
                         ModelState.AddModelError("Error", "NO HAY STOCK DEL PRODUCTO INGRESADO");
+                    }
+                    else {
+
+                        Productos producto = new Productos();
+                        producto = contexto.Productos.FirstOrDefault(data => data.ID == item.ID);
+                        contexto.Productos.Attach(producto);
+                        producto.STOCK = producto.STOCK - model.CANTIDAD;
                     }
 
                 }
@@ -76,12 +84,54 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         [HttpPut]
         public IActionResult Actualizar(int key, string values)
         {
+            Productos producto = new Productos();
+           
             var model = contexto.Pedidos.FirstOrDefault(item => item.ID == key);
+            producto = contexto.Productos.FirstOrDefault(data => data.ID == model.IDPRODUCTO);
+
             if (model == null)
                 return StatusCode(409, "Pedidos not found");
 
             var _values = JsonConvert.DeserializeObject<IDictionary>(values);
             PopulateModel(model, _values);
+            producto = contexto.Productos.FirstOrDefault(data => data.ID == model.IDPRODUCTO);
+
+            var ids = contexto.Pedidos.Select(i => new {
+                i.CANTIDAD,
+                i.ID
+            });
+            foreach (var items in ids)
+            {
+
+                if (items.ID.Equals(key))
+                {
+
+                    if (model.CANTIDAD > producto.STOCK)
+                    {
+                        ModelState.AddModelError("Error", "NO HAY STOCK DEL PRODUCTO INGRESADO");
+                    }
+                    else
+                    {
+                        if (model.CANTIDAD > items.CANTIDAD )
+                        {
+                            contexto.Productos.Attach(producto);
+                            int result = model.CANTIDAD-items.CANTIDAD ;
+                            producto.STOCK = producto.STOCK - result;
+
+                        }
+                        else
+                        {
+                            if (model.CANTIDAD < items.CANTIDAD)
+                            {
+                                contexto.Productos.Attach(producto);
+                                int result2 = items.CANTIDAD-model.CANTIDAD;
+                                producto.STOCK = producto.STOCK + result2;
+                            }
+                        }
+
+                    }
+                }
+            }           
 
             if (!TryValidateModel(model))
                 return BadRequest(GetFullErrorMessage(ModelState));
@@ -94,6 +144,13 @@ namespace APP_TEST_ALTIORACORP.Models.Controllers
         public void Eliminar(int key)
         {
             var model = contexto.Pedidos.FirstOrDefault(item => item.ID == key);
+            Productos producto = new Productos();
+
+            //actualiza stock
+
+            producto = contexto.Productos.FirstOrDefault(data => data.ID == model.IDPRODUCTO);
+            contexto.Productos.Attach(producto);
+            producto.STOCK = producto.STOCK + model.CANTIDAD;
 
             contexto.Pedidos.Remove(model);
             contexto.SaveChanges();

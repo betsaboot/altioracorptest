@@ -19,6 +19,7 @@ namespace APP_TEST_ALTIORACORP.Models
         public int STOCK { get; set; }
 
         public ICollection<Pedidos> Pedidos { get; set; }
+
     }
 }
 
